@@ -1,3 +1,7 @@
+/**
+ * author: xingshuo
+ * date: 2017-12-25
+ */
 #ifndef _HASH_H
 #define _HASH_H
 #include <stdio.h>

@@ -1,3 +1,7 @@
+/**
+ * author: xingshuo
+ * date: 2017-12-25
+ */
 #ifndef _PATHFIND_H_
 #define _PATHFIND_H_
 

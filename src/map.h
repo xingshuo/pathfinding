@@ -1,3 +1,7 @@
+/**
+ * author: xingshuo
+ * date: 2017-12-25
+ */
 #ifndef _MAP_H_
 #define _MAP_H_
 

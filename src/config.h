@@ -1,3 +1,7 @@
+/**
+ * author: xingshuo
+ * date: 2017-12-25
+ */
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 

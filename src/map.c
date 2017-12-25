@@ -1,3 +1,7 @@
+/**
+ * author: xingshuo
+ * date: 2017-12-25
+ */
 #include "config.h"
 #include "map.h"
 #include "pathfind.h"

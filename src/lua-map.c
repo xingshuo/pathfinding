@@ -1,3 +1,7 @@
+/**
+ * author: xingshuo
+ * date: 2017-12-25
+ */
 #include "config.h"
 #include "map.h"
 #include "pathfind.h"
@@ -21,6 +25,20 @@
         lua_rawset(L,-3);   \
     }while (0);
 
+/* new_map
+ *
+ * create a new Map userdata.
+ * 
+ * Arguments:
+ *  L   Lua state
+ *
+ * Lua Stack:
+ *  1   path of map file
+ *  2   whether open pathfinding cache
+ *
+ * Lua Returns:
+ *  +1  Map userdata
+ */
 static int
 new_map(lua_State *L) {
     const char* path = lua_tostring(L, 1);
@@ -35,6 +53,16 @@ new_map(lua_State *L) {
     return 1;
 }
 
+/* _delete_map
+ *
+ * __gc metamethod for Map userdata.
+ *
+ * Arguments:
+ *  L   Lua State
+ *
+ * Lua Stack:
+ *  1   Map userdata
+ */
 static int
 _delete_map(lua_State *L) {
     Map* m = check_map(L, 1);
@@ -42,6 +70,19 @@ _delete_map(lua_State *L) {
     return 0;
 }
 
+/* _tostring
+ *
+ * __tostring metamethod for Map userdata.
+ *
+ * Arguments:
+ *  L   Lua State
+ *
+ * Lua Stack:
+ *  1   Map userdata
+ *
+ * Lua Returns:
+ *  +1  string representation of Map userdata
+ */
 static int
 _tostring(lua_State *L) {
     Map* m = check_map(L, 1);
@@ -49,6 +90,19 @@ _tostring(lua_State *L) {
     return 1;
 }
 
+/* lset_block
+ *
+ * set dynamic blocking, if Map block changes, pathfinding cache cleared
+ *
+ * Arguments:
+ *  L   Lua state
+ * 
+ * Lua Stack:
+ *  1   Map userdata
+ *  2   row num
+ *  3   col num
+ *  4   block mark (see the enum in config.h)
+ */
 static int
 lset_block(lua_State *L) {
     Map* m = check_map(L, 1);
@@ -65,6 +119,21 @@ lset_block(lua_State *L) {
     return 0;
 }
 
+/* lget_block
+ *
+ * get the block mark of pos
+ *
+ * Arguments:
+ *  L   Lua state
+ *
+ * Lua Stack:
+ *  1   Map userdata
+ *  2   row num
+ *  3   col num
+ *
+ * Lua Returns:
+ *  +1 the block mark, if the pos is valid, nil otherwise.
+ */
 static int
 lget_block(lua_State *L) {
     Map* m = check_map(L, 1);
@@ -78,6 +147,23 @@ lget_block(lua_State *L) {
     }
 }
 
+/* lfind_path
+ *
+ * do pathfinding
+ *
+ * Arguments:
+ *  L   Lua state
+ *
+ * Lua Stack:
+ *  1   Map userdata
+ *  2   start row num
+ *  3   start col num
+ *  4   end row num
+ *  5   end col num
+ *
+ * Lua Returns:
+ *  +1  true + path, if find the path, false otherwise.
+ */
 static int
 lfind_path(lua_State *L) {
     Map* m = check_map(L, 1);
@@ -113,6 +199,19 @@ lfind_path(lua_State *L) {
     }
 }
 
+/* lget_noblocking_pos
+ *
+ * get a nonblocking point randomly
+ *
+ * Arguments:
+ *  L   Lua state
+ * 
+ * Lua Stack:
+ *  1   Map userdata
+ *
+ * Lua Returns:
+ *  +1  a table of noblocking pos, if find, nil otherwise.
+ */
 static int
 lget_noblocking_pos(lua_State *L) {
     Map* m = check_map(L, 1);
@@ -138,6 +237,21 @@ lget_noblocking_pos(lua_State *L) {
     return 0;
 }
 
+/* lis_block
+ *
+ * check pos whether block
+ *
+ * Arguments:
+ *  L   Lua state
+ *
+ * Lua Stack:
+ *  1   Map userdata
+ *  2   row num
+ *  3   col num
+ *
+ * Lua Returns:
+ *  +1  true, if pos is block or not a valid pos, false otherwise.
+ */
 static int
 lis_block(lua_State *L) {
     Map* m = check_map(L, 1);
@@ -150,6 +264,17 @@ lis_block(lua_State *L) {
     return 1;
 }
 
+/* lset_opencache
+ *
+ * open or close pathfinding cache, anyway, the cache will be cleared.
+ *
+ * Arguments:
+ *  L   Lua state
+ *
+ * Lua Stack:
+ *  1   Map userdata
+ *  2   open or close flag
+ */
 static int
 lset_opencache(lua_State *L) {
     Map* m = check_map(L, 1);
@@ -160,6 +285,19 @@ lset_opencache(lua_State *L) {
     return 0;
 }
 
+/* lis_opencache
+ *
+ * check whether open pathfinding cache
+ *
+ * Arguments:
+ *  L   Lua state
+ *
+ * Lua Stack:
+ *  1   Map userdata
+ *
+ * Lua Returns:
+ *  +1  true, if opened, false otherwise.
+ */
 static int
 lis_opencache(lua_State *L) {
     Map* m = check_map(L, 1);
@@ -168,6 +306,20 @@ lis_opencache(lua_State *L) {
     return 1;
 }
 
+/* linfo
+ *
+ * query info data
+ *
+ * Arguments:
+ *  L   Lua state
+ *
+ * Lua Stack:
+ *  1   Map userdata
+ *  2   query key
+ *
+ * Lua Returns:
+ *  +1  a table of info data, if query key is nil, the value query key correspond otherwise.
+ */
 static int
 linfo(lua_State *L) {
     Map* m = check_map(L, 1);

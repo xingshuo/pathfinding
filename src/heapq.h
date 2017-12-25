@@ -1,3 +1,7 @@
+/**
+ * author: xingshuo
+ * date: 2017-12-25
+ */
 #ifndef _HEAPQ_H
 #define _HEAPQ_H
 
