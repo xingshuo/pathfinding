@@ -12,13 +12,14 @@
 
 static Map*
 create_map(int row_num, int col_num, int grid_size, Tile* tiles, int halfg_flag) {
+    int size = row_num * col_num;
     Map* m = malloc(sizeof(*m));
     m->max_row = row_num;
     m->max_col = col_num;
     m->grid_size = grid_size;
     m->tiles = tiles;
     m->half_grid_flag = halfg_flag;
-    m->wt = malloc(row_num * col_num * sizeof(Weight));
+    m->wt = malloc(size * sizeof(Weight));
     int sr = 0;
     int sc = 0;
     Weight* sw = &m->wt[sr*col_num + sc];
@@ -29,9 +30,9 @@ create_map(int row_num, int col_num, int grid_size, Tile* tiles, int halfg_flag)
         int row;
         int col;
     }Pos;
-    uint8_t marked[row_num*col_num];
-    memset(marked, 0, sizeof(uint8_t)*row_num*col_num);
-    Pos queue[row_num*col_num];
+    uint8_t *marked = malloc(size * sizeof(uint8_t));
+    memset(marked, 0, size * sizeof(uint8_t));
+    Pos *queue = malloc(size * sizeof(Pos));
     int head = 0;
     int tail = 0;
     Pos ps = {sr,sc};
@@ -62,6 +63,8 @@ create_map(int row_num, int col_num, int grid_size, Tile* tiles, int halfg_flag)
             queue[tail++] = pn;
         }
     }
+    free(marked);
+    free(queue);
     return m;
 }
 
