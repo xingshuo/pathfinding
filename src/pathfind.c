@@ -12,14 +12,10 @@
 
 static inline uint64_t
 gen_hashkey(PathFinder* pf, int sr, int sc, int er, int ec) {
-    if (sr>0xffff || sc>0xffff || er>0xffff || ec>0xffff) {
-        return INVALID_KEY;
-    }
-    if (sr*pf->map->max_col+sc < er*pf->map->max_col+ec) {
-        return (((uint64_t)sr&0xffff)<<48) + (((uint64_t)sc&0xffff)<<32) + (((uint64_t)er&0xffff)<<16) + ((uint64_t)ec&0xffff);
-    }else {
-        return (((uint64_t)er&0xffff)<<48) + (((uint64_t)ec&0xffff)<<32) + (((uint64_t)sr&0xffff)<<16) + ((uint64_t)sc&0xffff);
-    }
+    uint64_t product = (uint64_t)pf->map->max_col*pf->map->max_row;
+    uint64_t a = (uint64_t)sr*pf->map->max_col+sc;
+    uint64_t b = (uint64_t)er*pf->map->max_col+ec;
+    return (a <= b) ? (a*product + b) : (b*product + a);
 }
 
 static void
