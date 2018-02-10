@@ -37,6 +37,7 @@ create_map(int row_num, int col_num, int grid_size, Tile* tiles, int halfg_flag)
     int tail = 0;
     Pos ps = {sr,sc};
     queue[tail++] = ps;
+    marked[sr*col_num + sc] = 1;
     while (head < tail) {
         Pos pcur = queue[head++];
         int cr = pcur.row;
