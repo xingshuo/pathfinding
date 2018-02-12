@@ -65,6 +65,7 @@ get_nodeline_vector(PathFinder *pf, Node* n1, Node* n2, float *vx, float *vz) {
 static float
 compute_h(PathFinder* pf, Node* node, float path_vx, float path_vz) {
     Node* snode = (Node*)&pf->node_map[pf->start_row * pf->map->max_col + pf->start_col];
+    Node* enode = (Node*)&pf->node_map[pf->end_row * pf->map->max_col + pf->end_col];
     float vx1 = path_vx;
     float vz1 = path_vz;
     float vx2, vz2;
@@ -76,14 +77,8 @@ compute_h(PathFinder* pf, Node* node, float path_vx, float path_vz) {
     }else {
         cosval = val/(sqrt(vx1*vx1 + vz1*vz1) * sqrt(vx2*vx2 + vz2*vz2));
     }
-    float wx1 = pf->map->wt[ node->row*pf->map->max_col + node->col ].x;
-    float wy1 = pf->map->wt[ node->row*pf->map->max_col + node->col ].y;
-    float wz1 = pf->map->wt[ node->row*pf->map->max_col + node->col ].z;
-
-    float wx2 = pf->map->wt[ node->row*pf->map->max_col + node->col ].x;
-    float wy2 = pf->map->wt[ node->row*pf->map->max_col + node->col ].y;
-    float wz2 = pf->map->wt[ node->row*pf->map->max_col + node->col ].z;
-    float dist = max(max(abs(wx1 - wx2),abs(wy1 - wy2)),abs(wz1 - wz2));
+    float dist;
+    cal_grids_dist(pf->map, node->row, node->col, enode->row, enode->col, dist);
     return BASE_COST * (dist + DETA*cosval);
 }
 

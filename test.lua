@@ -34,6 +34,12 @@ for i=1,10 do
     end
 end
 
+local wx,wy,wz = m:weight(sr,sc)
+print(string.format("<font  color='blue'> start pos weight [x:%s,y:%s,z:%s] </font> <br>",wx,wy,wz))
+local wx,wy,wz = m:weight(er,ec)
+print(string.format("<font  color='blue'> end pos weight [x:%s,y:%s,z:%s] </font> <br>",wx,wy,wz))
+print("<font  color='blue'>","dist:",m:dist(sr,sc, er,ec),"</font>","<br>")
+
 local ok,path = m:find_path(sr,sc, er,ec)
 local patch = {[sr*MAX_COL+sc] = 1, [er*MAX_COL+ec] = 1}
 if ok then
@@ -70,6 +76,10 @@ for i=0,MAX_ROW-1 do
             end
         end
         c:rect(x, y, GRID_SIZE, GRID_SIZE, color)
+        local wx,wy,wz = m:weight(i, j)
+        c:text(tostring(wx), x, y+GRID_SIZE/3, COLOR_BLACK)
+        c:text(tostring(wy), x+GRID_SIZE/2,   y+GRID_SIZE/3, COLOR_BLACK)
+        c:text(tostring(wz), x+GRID_SIZE/4, y+GRID_SIZE, COLOR_BLACK)
     end
 end
 

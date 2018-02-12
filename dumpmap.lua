@@ -5,7 +5,7 @@ math.randomseed(os.clock()*1000000)
 
 ROL_NUM = 20
 COL_NUM = 20
-BLOCK_SIZE = 24 --must be 2*n
+BLOCK_SIZE = 36 --must be 2*n
 
 function dumpmap(map_data, block_size, path)
     local sformat = string.format 

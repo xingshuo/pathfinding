@@ -361,6 +361,72 @@ linfo(lua_State *L) {
     }
 }
 
+/* lweight
+ *
+ * query grid weight
+ *
+ * Arguments:
+ *  L   Lua state
+ *
+ * Lua Stack:
+ *  1   Map userdata
+ *  2   query row
+ *  3   query col
+ *
+ * Lua Returns:
+ *  +3  x,y,z value of grid weight, if query pos is valid, nil otherwise.
+ */
+static int
+lweight(lua_State *L) {
+    Map* m = check_map(L, 1);
+    int row = luaL_checknumber(L, 2);
+    int col = luaL_checknumber(L, 3);
+    if (!is_valid_grid(m, row, col)) {
+        return 0;
+    }
+    int wx = m->wt[row*m->max_col + col].x;
+    int wy = m->wt[row*m->max_col + col].y;
+    int wz = m->wt[row*m->max_col + col].z;
+    lua_pushinteger(L, wx);
+    lua_pushinteger(L, wy);
+    lua_pushinteger(L, wz);
+    return 3;
+}
+
+/* ldist
+ *
+ * cal shortest distance of two grids
+ *
+ * Arguments:
+ *  L   Lua state
+ *
+ * Lua Stack:
+ *  1   Map userdata
+ *  2   query start row
+ *  3   query start col
+ *  4   query end row
+ *  5   query end col
+ *
+ * Lua Returns:
+ *  +1  shortest distance of two grids, if query two pos are valid, nil otherwise.
+ */
+static int
+ldist(lua_State *L) {
+    Map* m = check_map(L, 1);
+    int srow = luaL_checknumber(L, 2);
+    int scol = luaL_checknumber(L, 3);
+    int erow = luaL_checknumber(L, 4);
+    int ecol = luaL_checknumber(L, 5);
+    if (!is_valid_grid(m, srow, scol) || !is_valid_grid(m, erow, ecol)) {
+        return 0;
+    }
+    int dis;
+    cal_grids_dist(m, srow, scol, erow, ecol, dis);
+    lua_pushinteger(L, dis);
+    return 1;
+}
+
+
 int
 luaopen_cmap(lua_State* L) {
     srand(time(NULL));
@@ -378,6 +444,8 @@ luaopen_cmap(lua_State* L) {
         {"set_opencache", lset_opencache},
         {"is_opencache", lis_opencache},
         {"info", linfo},
+        {"weight", lweight},
+        {"dist", ldist},
         {NULL,NULL},
     };
     luaL_newmetatable(L, MAP_METATABLE);

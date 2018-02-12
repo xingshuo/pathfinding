@@ -46,4 +46,11 @@ function canvas:rect(x,y,w,h,c)
 	table.insert(self, string.format("ctx.fillRect(%d,%d,%d,%d);",x,y,w,h))
 end
 
+function canvas:text(context,x,y,c)
+	if c then
+		table.insert(self, "ctx.fillStyle = '" .. c .. "';")
+	end
+	table.insert(self, string.format("ctx.fillText(%d,%d,%d);",context,x,y))
+end
+
 return canvas
